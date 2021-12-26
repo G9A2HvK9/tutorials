@@ -1,45 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { csv, arc, pie} from 'd3';
+import { csv, scaleLinear, extent, scaleBand, format} from 'd3';
 import './App.css';
+import { AxisLeft } from './axisLeft';
+import { AxisBottom } from './axisBottom';
+import { Marks } from './marks';
+
+
 
 const csvUrl = 'https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/0e7a9b0a5d22642a06d3d5b9bcbad9890c8ee534/iris.csv'; 
 
 const width = 960;
 const height = 500;
-
-const centerX = width/2;
-const centerY = height/2;
-
-const pieArc = arc()
-  .innerRadius(0)
-  .outerRadius(width)
-
+const margin = { top: 20, right: 30, bottom: 65, left: 220};
+const xAxisLabelOffset = 50;
+const yAxisLabelOffset = 45;
 
 function App() {
 
   const [data, setData] = useState(null);
 
   useEffect(() => {
-      csv(csvUrl).then(setData);
+      const row = d => {
+        d.sepal_length = +d.sepal_length; 
+        d.sepal_width = +d.sepal_width;
+        d.petal_length = +d.petal_length;
+        d.petal_width = +d.petal_width;
+        return d;
+      };
+      csv(csvUrl, row).then(setData);
   }, [])
 
   if (!data) {
     return <pre>Loading...</pre>;
   }
 
+  const innerHeight = height - margin.top - margin.bottom;
+  const innerWidth = width - margin.left - margin.right;
 
-  const colorPie = pie()
-    .value(1)
+  const xValue = d => d.petal_length;
+  const xAxisLabel = 'Petal Length';
+
+  const yValue = d => d.sepal_width;
+  const yAxisLabel = 'Sepal Width';
+
+  const siFormat = format('.2s');
+  const xAxisTickFormat = tickValue => siFormat(tickValue).replace('G', 'B');
+
+
+  const xScale = scaleLinear()
+  .domain(extent(data, xValue))
+  .range([0, innerWidth])
+  .nice();
+
+  const yScale = scaleLinear()
+    .domain(extent(data, yValue))
+    .range([0, innerHeight])
+    .nice();
   
-    return  (
+  return  (
     <svg width={width} height={height}>
-      <g transform = {`translate(${centerX}, ${centerY})`}>
-        {colorPie(data).map( d => (
-          <path 
-            fill = {d.data['RGB hex value']} 
-            d ={pieArc(d)}
-          />
-        ))}
+      <g transform={`translate(${margin.left},${margin.top})`}>
+        <AxisBottom
+          xScale={xScale}
+          innerHeight={innerHeight}
+          tickFormat={xAxisTickFormat}
+          tickOffset={5}
+        />
+        <text
+          className='axis-label'
+          textAnchor='middle'
+          transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
+        >
+          {yAxisLabel}
+        </text>
+        <AxisLeft 
+          yScale={yScale}
+          innerWidth={innerWidth}
+          tickOffset={5}
+        />
+        <text
+          className='axis-label'
+          x={innerWidth / 2}
+          y={innerHeight + xAxisLabelOffset}
+          textAnchor='middle'
+        >
+          {xAxisLabel}
+        </text>
+        <Marks
+          data={data}
+          xScale={xScale}
+          yScale={yScale}
+          xValue={xValue}
+          yValue={yValue}
+          toolTipFormat={xAxisTickFormat}
+          circleRadius={7}
+        />
       </g>
     </svg>
   )
