@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { csv, arc, pie} from 'd3';
 import './App.css';
 
-const csvUrl = 'https://gist.githubusercontent.com/curran/b236990081a24761f7000567094914e0/raw/cssNamedColors.csv'; 
+const csvUrl = 'https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/0e7a9b0a5d22642a06d3d5b9bcbad9890c8ee534/iris.csv'; 
 
 const width = 960;
 const height = 500;
