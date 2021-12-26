@@ -9,11 +9,9 @@ export const useData = () => {
 
     useEffect(() => {
         const row = d => {
-          d.sepal_length = +d.sepal_length; 
-          d.sepal_width = +d.sepal_width;
-          d.petal_length = +d.petal_length;
-          d.petal_width = +d.petal_width;
-          return d;
+            d.timestamp = new Date(d.timestamp)
+            d.temperature = +d.temperature
+            return d;
         };
         csv(csvUrl, row).then(setData);
     }, [])
