@@ -5,6 +5,7 @@ import { useData } from './useData'
 import { AxisLeft } from './axisLeft';
 import { AxisBottom } from './axisBottom';
 import { Marks } from './marks';
+import { Dropdown } from './dropdown';
 
 const width = 960;
 const height = 500;
@@ -43,6 +44,7 @@ function App() {
     .nice();
   
   return  (
+    <>
     <svg width={width} height={height}>
       <g transform={`translate(${margin.left},${margin.top})`}>
         <AxisBottom
@@ -82,6 +84,9 @@ function App() {
         />
       </g>
     </svg>
+      <label for="pet-select">Choose a pet:</label>
+      <Dropdown id="pet-select" options={options}/>
+    </>
   )
 }
 
