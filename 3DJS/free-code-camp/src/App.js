@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { csv, scaleLinear, extent, scaleBand, format} from 'd3';
 import './App.css';
+import { useData } from './useData'
 import { AxisLeft } from './axisLeft';
 import { AxisBottom } from './axisBottom';
 import { Marks } from './marks';
-
-
-
-const csvUrl = 'https://gist.githubusercontent.com/curran/90240a6d88bdb1411467b21ea0769029/raw/7d4c3914cc6a29a7f5165f7d5d82b735d97bcfe4/week_temperature_sf.csv';
 
 const width = 960;
 const height = 500;
@@ -17,18 +14,7 @@ const yAxisLabelOffset = 45;
 
 function App() {
 
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-      const row = d => {
-        d.sepal_length = +d.sepal_length; 
-        d.sepal_width = +d.sepal_width;
-        d.petal_length = +d.petal_length;
-        d.petal_width = +d.petal_width;
-        return d;
-      };
-      csv(csvUrl, row).then(setData);
-  }, [])
+  const data = useData()
 
   if (!data) {
     return <pre>Loading...</pre>;
