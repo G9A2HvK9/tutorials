@@ -51,6 +51,14 @@ pre {
   stroke-linecap: round;
 }
 
+label, select {
+  font-size: 2em;
+}
+
+select option {
+  font-size: 1rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

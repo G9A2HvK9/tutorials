@@ -1,14 +1,9 @@
 import React from "react";
 
-const options = [
-  {value: 'goldfish', label: 'Goldfish'},
-  {value: 'hamster', label:'Hamster'}
-]
-
-export const Dropdown = ({options, id}) => (
-  <select id={id}>
+export const Dropdown = ({options, id, selectedValue, onSelectedValueChange}) => (
+  <select id={id} onChange={event => onSelectedValueChange(event.target.value)}>
     {options.map(({ value, label }) => (
-      <option value={value}>{label}</option>
+      <option value={value} selected={value === selectedValue}>{label}</option>
     ))}
   </select> 
 );
