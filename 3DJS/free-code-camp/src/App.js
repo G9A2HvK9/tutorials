@@ -53,7 +53,7 @@ function App() {
   const innerWidth = width - margin.left - margin.right;
 
   const siFormat = format('.2s');
-  const xAxisTickFormat = tickValue => siFormat(tickValue).replace('G', 'B');
+  const xAxisTickFormat = tickValue => siFormat(tickValue);
 
 
   const xScale = scaleLinear()
@@ -68,14 +68,14 @@ function App() {
   
   return  (
     <>
-      <label for="x-select">X:</label>
+      <label htmlFor="x-select">X:</label>
       <Dropdown 
         id="x-select" 
         options={attributes}
         selectedValue={xAttribute}
         onSelectedValueChange={setXAttribute}
       />
-      <label for="y-select">Y:</label>
+      <label htmlFor="y-select">Y:</label>
       <Dropdown 
         id="y-select" 
         options={attributes}
