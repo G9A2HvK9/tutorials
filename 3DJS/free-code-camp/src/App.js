@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { scaleLinear, extent, format } from 'd3';
+import { scaleLinear, extent, timeFormat, scaleTime } from 'd3';
 import './App.css';
 import { useData } from './useData'
 import { AxisLeft } from './axisLeft';
@@ -16,11 +16,8 @@ const yAxisLabelOffset = 45;
 
 
 const attributes = [
-  {value: 'sepal_length', label: 'Sepal Length'},
-  {value: 'sepal_width', label: 'Sepal Width'},
-  {value: 'petal_length', label: 'Petal Length'},
-  {value: 'petal_width', label: 'Petal Width'},
-  {value: 'species', label: 'Species'}
+  {value: 'Reported Date', label: 'Reported Date'},
+  {value: 'Total Dead and Missing', label: 'Total Dead and Missing'}
 ]
 
 const getLabel = value => {
@@ -35,12 +32,12 @@ function App() {
 
   const data = useData()
 
-  const initialXAttribute = 'petal_length';
+  const initialXAttribute = 'Reported Date';
   const [xAttribute, setXAttribute] = useState(initialXAttribute);
   const xValue = d => d[xAttribute];
   const xAxisLabel = getLabel(xAttribute);
   
-  const initialYAttribute = 'sepal_width';
+  const initialYAttribute = 'Total Dead and Missing';
   const [yAttribute, setYAttribute] = useState(initialYAttribute);
   const yValue = d => d[yAttribute];
   const yAxisLabel = getLabel(yAttribute);
@@ -52,18 +49,17 @@ function App() {
   const innerHeight = height - margin.top - margin.bottom;
   const innerWidth = width - margin.left - margin.right;
 
-  const siFormat = format('.2s');
-  const xAxisTickFormat = tickValue => siFormat(tickValue);
+  const xAxisTickFormat = timeFormat('%Y');
 
 
-  const xScale = scaleLinear()
+  const xScale = scaleTime()
     .domain(extent(data, xValue))
     .range([0, innerWidth])
     .nice();
 
   const yScale = scaleLinear()
     .domain(extent(data, yValue))
-    .range([0, innerHeight])
+    .range([innerHeight, 0])
     .nice();
   
   return  (

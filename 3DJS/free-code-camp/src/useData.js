@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { csv } from 'd3';
 
-const csvUrl = 'https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/0e7a9b0a5d22642a06d3d5b9bcbad9890c8ee534/iris.csv'; 
+const csvUrl = 'https://gist.githubusercontent.com/curran/a9656d711a8ad31d812b8f9963ac441c/raw/c22144062566de911ba32509613c84af2a99e8e2/MissingMigrants-Global-2019-10-08T09-47-14-subset.csv'; 
 
 export const useData = () => {
 
@@ -9,11 +9,9 @@ export const useData = () => {
 
     useEffect(() => {
         const row = d => {
-          d.sepal_length = +d.sepal_length; 
-          d.sepal_width = +d.sepal_width;
-          d.petal_length = +d.petal_length;
-          d.petal_width = +d.petal_width;
-          return d;
+          d['Reported Date'] = new Date(d['Reported Date'])
+          d['Total Dead and Missing'] = +d['Total Dead and Missing']
+          return d
         };
         csv(csvUrl, row).then(setData);
     }, [])
