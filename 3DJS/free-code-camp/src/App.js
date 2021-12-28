@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { scaleLinear, extent, timeFormat, scaleTime } from 'd3';
+import { scaleLinear, extent, timeFormat, scaleTime, bin, timeMonths, sum, max} from 'd3';
 import './App.css';
 import { useData } from './useData'
 import { AxisLeft } from './axisLeft';
@@ -51,14 +51,25 @@ function App() {
 
   const xAxisTickFormat = timeFormat('%Y');
 
-
   const xScale = scaleTime()
     .domain(extent(data, xValue))
     .range([0, innerWidth])
     .nice();
 
+  const [start, stop] = xScale.domain()
+
+  const binnedData = bin()
+    .value(xValue)
+    .domain(xScale.domain())
+    .thresholds(timeMonths(start, stop))(data)
+    .map(array => ({
+      y: sum(array, yValue),
+      x0: array.x0,
+      x1: array.x1
+    }))
+
   const yScale = scaleLinear()
-    .domain(extent(data, yValue))
+    .domain([0, max(binnedData, d => d.y )])
     .range([innerHeight, 0])
     .nice();
   
@@ -107,13 +118,11 @@ function App() {
             {xAxisLabel}
           </text>
           <Marks
-            data={data}
+            binnedData={binnedData}
             xScale={xScale}
             yScale={yScale}
-            xValue={xValue}
-            yValue={yValue}
             toolTipFormat={xAxisTickFormat}
-            circleRadius={3}
+            innerHeight={innerHeight}
           />
         </g>
       </svg>
