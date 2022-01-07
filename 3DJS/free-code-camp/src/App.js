@@ -121,7 +121,7 @@ function App() {
             binnedData={binnedData}
             xScale={xScale}
             yScale={yScale}
-            toolTipFormat={xAxisTickFormat}
+            toolTipFormat={d => d}
             innerHeight={innerHeight}
           />
         </g>
